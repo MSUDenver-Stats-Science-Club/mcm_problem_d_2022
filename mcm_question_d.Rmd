@@ -3,7 +3,7 @@ title: "ICM Report"
 output: 
   pdf_document:
     toc: true
-    toc_depth: 2
+    toc_depth: 4
     number_sections: true
     includes:
       in_header: "headers.tex"
@@ -12,16 +12,11 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
-library(flextable)
 library(fmsb)
+library(kableExtra)
 library(tibble)
-
-flextable::set_flextable_defaults(
-  fonts_ignore = TRUE
-)
-
 ```
-
+\newpage
 # Intercontinental Cargo Moving Corporation Evaluation
 
 ## Background
@@ -38,20 +33,21 @@ To provide ICM with the aforementioned tools, our team is tasked with implementi
 ## Model
 
 ### People
-This section is meant to address the hiring needs and concerns of Intercontinental Cargo Moving (ICM) corporation. Including the implementation of a logistic regression model specifically designed to evaluate current talent and identify key areas of need for future employees for the Data \& Analysis (D\&A) team. The model being considered will consist of predicting how likely an employee is to be working on a project best suited to their skills and to ICM's needs. The increasing challenges of hiring and evaluating employees has never been more important and similarly, the ability to use models to create an intellectually stimulating and innovative work environment is at the forefront of all companies needs. This section will address the concerns as identified by ICM, including how to evaluate current and future employees, where and what kinds of people to hire, and how to best employ an efficient workforce. 
 
-\subsection{Introduction}
-\>We begin by examining a framework in which ICM can get a complete picture of how their employees are performing. Namely, the evaluation of current and future talent at ICM will consist of identifying the ratio between cost and time of given projects. That is, given a project, how much is it costing the company versus how much is ICM gaining from the completion of the project. This can be revenue or experience gained. Cost in this sense is referring to both the financial cost, as well as cost in terms of number of employees assigned to a project. In other words, the goal is to identify projects that are high cost and high time, and make adjustments that reduce cost/time based on which employees are working on the project. High cost, high time project will often yield significantly worse results then projects that are low cost and low time, which in turn, effects the overall productivity of the company. Ideally, all projects would be designated low cost and low time. Again, low cost in this sense, does not strictly refer to financial cost, but to an optimization of having the right employees working on the right projects.
+This section is meant to address the hiring needs and concerns of ICM. Including the implementation of a logistic regression model specifically designed to evaluate current talent and identify key areas of need for future employees for the DA systems team. The model being considered will consist of predicting how likely an employee is to be working on a project best suited to their skills and to ICM's needs. The increasing challenges of hiring and evaluating employees has never been more important and similarly, the ability to use models to create an intellectually stimulating and innovative work environment is at the forefront of all companies needs. This section will address the concerns as identified by ICM, including how to evaluate current and future employees, where and what kinds of people to hire, and how to best employ an efficient workforce. 
+
+#### Introduction
+
+We begin by examining a framework in which ICM can get a complete picture of how their employees are performing. Namely, the evaluation of current and future talent at ICM will consist of identifying the ratio between cost and time of given projects. That is, given a project, how much is it costing the company versus how much is ICM gaining from the completion of the project. This can be revenue or experience gained. Cost in this sense is referring to both the financial cost, as well as cost in terms of number of employees assigned to a project. In other words, the goal is to identify projects that are high cost and high time, and make adjustments that reduce cost/time based on which employees are working on the project. High cost, high time project will often yield significantly worse results then projects that are low cost and low time, which in turn, effects the overall productivity of the company. Ideally, all projects would be designated low cost and low time. Again, low cost in this sense, does not strictly refer to financial cost, but to an optimization of having the right employees working on the right projects.
 To achieve the goal of optimizing ICM's workforce, there must be a plethora of data in which employees can be accurately regarded. For the sake of simplicity and clarity, the initial model will consists of five key skill identifiers. Including, general/specific skills: Data Analysis, Quantitative reasoning, Programming ability, Project Management, and Communication skills. Additionally, years of experience will be a parameter to consider, and finally, is the employee actively involved in a low cost low time project. This is subject to change, and clearly, somewhat subjective, which is intended. By identifying what projects are currently viewed as low cost and time, as well as who is working on those projects, the skills that are involved in ensuring the success of those projects can be leveraged in such a way that all employees can be assigned to projects that would increase the likely hood of the project either continuing to be or moving to being a low cost and time project. 
 
-\subsection{Model}
-\>The logistic regression model is useful when attempting to predict the probability of an event occurring in either a True or False scenario, which will be denoted as the response variable. In this case, the model will be used to determine the probability of an employee being involved in a low cost and low time project, so the response variable is involved in  'low cost low time project' or not. The same model can be used for predicting employees involved in high cost high time projects.  The goal in doing this, as mentioned previously, is to identify which persons are generating revenue and boosting productivity as opposed to employees who are not. This is both to highlight the abilities of a number of employees whilst exploiting weaknesses in projects or employees. This will then allow for adjustments to be made, training to be implemented, and general needs to be met. The general equation of logistic equation is represented as:
+#### Assessment Method
+
+The logistic regression model is useful when attempting to predict the probability of an event occurring in either a True or False scenario, which will be denoted as the response variable. In this case, the model will be used to determine the probability of an employee being involved in a low cost and low time project, so the response variable is involved in  'low cost low time project' or not. The same model can be used for predicting employees involved in high cost high time projects.  The goal in doing this, as mentioned previously, is to identify which persons are generating revenue and boosting productivity as opposed to employees who are not. This is both to highlight the abilities of a number of employees whilst exploiting weaknesses in projects or employees. This will then allow for adjustments to be made, training to be implemented, and general needs to be met. The general equation of logistic equation is represented as
 \begin{align*}
     \log[\frac{p(X)}{(1-p(X))}]  =  \beta_0 X_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_p X_p
 \end{align*}
-Where $X_j$ is the $j^{th}$ predictor variable and $\beta_j$ is the coefficient estiamte for the $j^{th}$ predictor variable, for $1 \leq j \leq n$.  
-$ $\newline
-The formula on the right side of the equation predicts the log odds of the response variable taking on a value of 1.
+where $X_j$ is the $j^{th}$ predictor variable and $\beta_j$ is the coefficient estiamte for the $j^{th}$ predictor variable, for $1 \leq j \leq n$. The formula on the right side of the equation predicts the log odds of the response variable taking on a value of 1.
 
 Thus, when we fit a logistic regression model we can use the following equation to calculate the probability that a given observation takes on a value of 1:
 \begin{align*}
@@ -59,20 +55,21 @@ Thus, when we fit a logistic regression model we can use the following equation 
 \end{align*}
 We then use some probability threshold to classify the observation as either 1 or 0. For example, given a data set with 40 people, the model used would output something that predicts with approximately $70\%$ accuracy an employee being involved in a low cost low time project. From here ICM can examine what skills that employee has, as well as how man years of experience they have. Now, it should be emphasized that this model will improve with more data, that is, the more parameters that are used to associate employees with successful projects the better the model will be at identifying high or low need areas. 
 
-\subsection{Outcomes}
-\>Once areas of concern are addressed and adequate skills are identified. The next step is to hire employees that fill the gaps. It is recommended that ICM immediately begins an internship program. From the model, as seen above, years of experience correlate to more successful projects. This means that by starting an internship program ICM can gain a competitive advantage by training undergraduates or recently graduates and exposing them to employees that have a high probability of being involved in low cost low time projects, so by the time they are ready to being working full-time, they already possess some of the key skills ICM is looking for. How many individuals that are hired should be proportional to the number of low cost low time projects that ICM is working on. For example, by hiring too many people it is likely that the risk of inflating low cost low time projects increases, and conversely for not hiring enough people. SO the general guideline that would be suggested is to continually check the model to ensure that if a project is shifting toward being high cost high time, it may be time to hire more people, and similarly, by removing people from projects, if the project remains as a low cost low time project, then it is likely that too many people are involved on the project. \\
-\> Aside from universities, getting involved in conferences and looking for people that specialize in certain tasks will be beneficial, as well providing context for contracting out positions versus full-time hiring. For example, suppose there exists a project that is highly quantitative and necessitates programming skills. It would clearly be advantageous to hire somebody who already possesses those skills and can efficiently turn a high cost high time project into a low cost low time project. However, it could be that ICM only has a small number of these projects at a given time, where hiring a full-time employee increases the risk of inflating projects and creating bloat. This would be a good time to contract-out these temporary positions without compromising the integrity of the model. Instead, focusing attention on projects that need full-time employees. 
+#### Assessment Outcomes
 
-\subsection{Summary}
-\>Addressing the complex and comprehensive needs of a corporation like ICM must rely on the use of data-driven approaches. By modeling the various projects ICM is involved in using cost and time, ICM can identify key skills and characteristics of their employees and use that information to make data informed decisions. It should also be noted that not all employees share the same skills, so by moving an employee who has high programming or quantitative skills to an area that is in need of those skills the chances of improving the productivity of the workplace increases. This also exposes employees to a variety of different skills and serves as a "On-the fly" training experience. Hiring, aside from the usual outlets, should consist of locating talented individuals through an internship program or university/conference setting to find specialized talent they can outsource for optimal efficiency. Training can be done on the job when employing a model that specializes in putting the right people on the right projects. Therefore, by utilizing a logistic regression model, as well as some variation of skill, as determined by what projects are having success, ICM can create an environment that will not only benefit themselves, but their employees by putting them in positions to succeed.  
+Once areas of concern are addressed and adequate skills are identified. The next step is to hire employees that fill the gaps. It is recommended that ICM immediately begins an internship program. From the model, as seen above, years of experience correlate to more successful projects. This means that by starting an internship program ICM can gain a competitive advantage by training undergraduates or recently graduates and exposing them to employees that have a high probability of being involved in low cost low time projects, so by the time they are ready to being working full-time, they already possess some of the key skills ICM is looking for. How many individuals that are hired should be proportional to the number of low cost low time projects that ICM is working on. For example, by hiring too many people it is likely that the risk of inflating low cost low time projects increases, and conversely for not hiring enough people. SO the general guideline that would be suggested is to continually check the model to ensure that if a project is shifting toward being high cost high time, it may be time to hire more people, and similarly, by removing people from projects, if the project remains as a low cost low time project, then it is likely that too many people are involved on the project.
 
+Aside from universities, getting involved in conferences and looking for people that specialize in certain tasks will be beneficial, as well providing context for contracting out positions versus full-time hiring. For example, suppose there exists a project that is highly quantitative and necessitates programming skills. It would clearly be advantageous to hire somebody who already possesses those skills and can efficiently turn a high cost high time project into a low cost low time project. However, it could be that ICM only has a small number of these projects at a given time, where hiring a full-time employee increases the risk of inflating projects and creating bloat. This would be a good time to contract-out these temporary positions without compromising the integrity of the model. Instead, focusing attention on projects that need full-time employees. 
 
+#### Summary
+
+Addressing the complex and comprehensive needs of a corporation like ICM must rely on the use of data-driven approaches. By modeling the various projects ICM is involved in using cost and time, ICM can identify key skills and characteristics of their employees and use that information to make data informed decisions. It should also be noted that not all employees share the same skills, so by moving an employee who has high programming or quantitative skills to an area that is in need of those skills the chances of improving the productivity of the workplace increases. This also exposes employees to a variety of different skills and serves as a "On-the fly" training experience. Hiring, aside from the usual outlets, should consist of locating talented individuals through an internship program or university/conference setting to find specialized talent they can outsource for optimal efficiency. Training can be done on the job when employing a model that specializes in putting the right people on the right projects. Therefore, by utilizing a logistic regression model, as well as some variation of skill, as determined by what projects are having success, ICM can create an environment that will not only benefit themselves, but their employees by putting them in positions to succeed.  
 
 ### Technology
 
 #### Criteria
 
-Since the framework for evaluating technical solutions is more important than choosing them at this time, specific criteria need to be established as metrics to measure the effectiveness of a specific solution, now or in the future. The six criteria measured in this model are as follows, with Feature Match having the highest weighting in the final calculation:   
+Since the framework for evaluating technical solutions is more important than choosing them at this time, specific criteria need to be established as metrics to measure the effectiveness of a specific solution, now or in the future. The six criteria measured in this model are as follows, with Feature Match having the highest weight in the final calculation:   
 - Price  
 - Support  
 - Ease of Use  
@@ -80,7 +77,7 @@ Since the framework for evaluating technical solutions is more important than ch
 - Trial Options  
 - Accessibility (operating system availability, options for contrast, etc.)  
 
-For each solution, the criteria are evaluated and given a score from 0 to 100 with 100 being the highest score. Consideration of what is considered "good" for a metric is also taken into account. For example, a low priced solution with good support would have high scores in both categories. The scores are input into the program which displays the scores on a radar chart separated by solution. Additionally, a weighted score is calculated for each solution.  
+For each solution, the criteria are evaluated and given a score from 0 to 100 with 100 being the highest score. Consideration of what is considered "good" for a metric is also taken into account. For example, a low priced solution with good support would have high scores in both categories. The scores are input into the program which displays the scores on a radar chart separated by solution. Additionally, a weighted score is calculated for each solution.
 
 The model can work for physical and digital forms of technology and can indicate if multiple products are needed. For example, if two products fulfill different aspects of a needed solution, but both have good overall scores, then they might both be a good fit to use together.  
 
@@ -88,10 +85,9 @@ The following code and diagrams are examples made with simulated data and do not
 
 #### Initial Pass
 
-The first step is to display all the proposed solutions next to each other to create an initial comparison. This provides an overview of all possible options before the list gets trimmed down.
+The first step is to display all the proposed solutions next to each other to create an initial comparison. This provides an overview of all possible options before the list gets trimmed down. 
 
-
-```{r, dpi=300, fig.width=7, warning=FALSE, strip.white=FALSE}
+```{r, dpi=300, fig.width=7, warning=FALSE, strip.white=FALSE, echo=FALSE}
 
 set.seed(12345)     # Sets seed for repeatable results
 num_prog <- 9       # Sets number of solutions
@@ -150,19 +146,20 @@ solution_data <- cbind(tech_analysis, "Eval" = c(-1, -1, score))
 # Displays solutions with all data including the weighted score
 table1 <- solution_data[3:nrow(solution_data),] %>% 
   tibble::rownames_to_column("Solutions") %>% 
-  flextable::flextable() %>% 
-  flextable::theme_zebra() %>% 
-  flextable::autofit(add_w = 0, add_h = 0)
+  kableExtra::kbl(caption = "Possible Solutions") %>%
+  kableExtra::kable_minimal() %>%
+  kableExtra::kable_styling(latex_options = "scale_down")
+
 table1
 ```
+
 A viewer can easily use the charts to compare the strengths and weaknesses of each solution or they can use the table for a more detailed breakdown of each solution. By displaying the data in this fashion, incompatible or unnecessary tools can be dismissed quickly, resulting in less cluttered decision making.  
 
 #### Filtering
 
 After all solutions are evaluated and displayed, the data set is filtered for solutions with high evaluation scores. The program is currently configured to pull solutions with a weighted score of 75 or higher.
 
-
-```{r, dpi=300, fig.width=8, warning=FALSE, strip.white=FALSE}
+```{r, dpi=300, fig.width=7, warning=FALSE, strip.white=FALSE, echo=FALSE}
 
 # Filters out all solutions with a weighted score >= 75 and removes score column
 high_scores <- solution_data %>% 
@@ -197,9 +194,10 @@ par(op)
 table_frame <- solution_data %>% filter(Eval >= 75 | Eval == -1)
 table2 <- table_frame[3:nrow(table_frame),] %>% 
   tibble::rownames_to_column("Solutions") %>% 
-  flextable::flextable() %>% 
-  flextable::theme_zebra() %>% 
-  flextable::autofit(add_w = 0, add_h = 0)
+  kableExtra::kbl(caption = "Best Fit Solutions") %>%
+  kableExtra::kable_minimal() %>%
+  kableExtra::kable_styling(latex_options = "scale_down")
+
 table2
 ```
 
@@ -209,10 +207,7 @@ Shrinking the data set to only a few options, or in this case one, allows for a 
 
 With these systems and visualizations in place, it is easy to see how different technical solutions compare to each other, as well as where they excel and what they lack. By using this system, the Information Technology (IT) department at ICM can make informed decisions about technical solutions and prioritize what criteria are most important to the company.
 
-
 ### Process
-
-
 
 #### Data Governance
 
@@ -233,7 +228,7 @@ Within the following section we show how a system following a single source of t
 
 We create two tables that track imports and exports so that we can provide management with insights as to which containers are entering and exiting the port. This would allow us to track the number of containers we are currently holding, when they should be scheduled to leave the port, whether or not they should be going through customs, and the owner of the containers.
 
-```{r import_export, echo=FALSE}
+```{r import_export, echo = FALSE}
 ## `dim_imports` and `dim_exports` look at the import and export of items 
 ## within the port and provides details on those item's origins. 
 dim_imports <- 
@@ -269,26 +264,29 @@ dim_exports <-
   ) %>%
   dplyr::relocate(transaction_id)
 
-dim_imports_ft <- flextable::flextable(dim_imports) %>%
-  flextable::add_footer_lines("An example of import data that could be contained within the appropriate database container.") %>%
-  flextable::set_caption("Import Dimensional Table") %>%
-  flextable::theme_vanilla() %>%
-  flextable::set_table_properties(layout = "autofit")
+dim_imports_ft <- 
+  dim_imports %>%
+  kableExtra::kbl(caption = "Import Dimensional Table") %>%
+  kableExtra::footnote(general = "Sample import data extracted from ICM database container") %>%
+  kableExtra::kable_minimal() %>%
+  kableExtra::kable_styling(latex_options = "scale_down")
 
-dim_exports_ft <- flextable::flextable(dim_exports) %>%
-  flextable::add_footer_lines("An example of export data that could be contained within the appropriate database container.") %>%
-  flextable::set_caption("Export Dimensional Table") %>%
-  flextable::theme_vanilla() %>%
-  flextable::set_table_properties(layout = "autofit")
+dim_exports_ft <- 
+  dim_exports %>%
+  kableExtra::kbl(caption = "Export Dimensional Table") %>%
+  kableExtra::footnote(general = "Sample export data extracted from ICM database container") %>%
+  kableExtra::kable_minimal() %>%
+  kableExtra::kable_styling(latex_options = "scale_down")
+```
 
+```{r ie_out, echo=FALSE}
 dim_imports_ft
 dim_exports_ft
-
 ```
 
 Similarly, we can audit where specific containers are transported after we receive them. Using a dimensional table that tracks where containers are relocated after we receive them, or before and after going through the customs process would be a useful tool to audit which containers we still have in our possession and where. To illustrate this idea, we include a matrix of hypothetical grid locations within the port used for storing these containers.
 
-```{r transport}
+```{r transport, echo=FALSE}
 ## `dim_port_transportation` looks at the transportation schedules of the items within the port.
 ## storage_location should be a function of schd_export_date so that we're storing items in the appropriate location within the port.
 v <- c(paste0("A", 1:6), paste0("B", 1:6), paste0("C", 1:6)) %>%
@@ -320,12 +318,26 @@ dim_port_transportation <-
   ) %>%
   dplyr::relocate(transaction_id)
 
+v_ft <-
+  v %>%
+  kableExtra::kbl(caption = "Grid showing hypothetical storage locations in the port") %>%
+  kableExtra::kable_minimal()
 
+dim_port_transportation_ft <- 
+  dim_port_transportation %>%
+  kableExtra::kbl(caption = "Transportation Dimensional Table") %>%
+  kableExtra::footnote(general = "Sample transportation data extracted from ICM database container") %>%
+  kableExtra::kable_minimal() %>%
+  kableExtra::kable_styling(latex_options = "scale_down")
+
+v_ft
+dim_port_transportation_ft
 
 ```
 
-```{r operations}
+Finally, to create an aggregated report that provides managers with visibility of the port's daily operations we can join all of our dimensional tables into a factual table that provides consistent data. This table provides the DA systems team with a powerful foundation for deeper reports and artificial intelligence/machine learning solutions.
 
+```{r operations, echo=FALSE}
 ## `fact_operations` allows managers to gain visibility into the daily operations occuring within the port.
 fact_operations <- 
   dim_imports %>%
@@ -352,11 +364,20 @@ fact_operations <-
     )
   )
 
+fact_operations_ft <- 
+  fact_operations %>%
+  kableExtra::kbl(caption = "Operations Factual Table") %>%
+  kableExtra::footnote(general = "Operations data combined from dimensional tables collected from ICM database containers") %>%
+  kableExtra::kable_minimal() %>%
+  kableExtra::kable_styling(latex_options = "scale_down")
+
+fact_operations_ft
+
 ```
 
 #### Metadata
 
 Metadata is equally as important as some of the items outlined in the previous data governance section. To reduce the time spent by members of the DA system team investigating the use and contents of data sets, we can provide metadata that explains the use and contents of the data. ICM can create effective metadata by drafting documentation that lists each table contained within a database, their uses, and which area of the business they pertain to. Within each table of the database, ICM should create a list of all columns of that table, the data types of each column, the primary keys associated with that table, and the contents that each column represents. Strong documentation can assist with the longevity and archival of data as tables outlive their usefulness, are superseded or deprecated, or become irrelevant if the data contained within the table is no longer needed for analysis. 
+\newpage
 
-## Letter to Interested Parties
-
+# Letter to Interested Parties
