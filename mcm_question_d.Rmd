@@ -11,12 +11,33 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+## Libraries
 library(dplyr)
 library(fmsb)
 library(kableExtra)
 library(tibble)
+library(reticulate)
+
+## For python code
+knitr::knit_engines$set(python = reticulate::eng_python)
 ```
 \newpage
+# Summary
+
+This report outlines our methods used to assess our client Intercontinental Cargo Moving Corporation (ICM). ICM is a distributor that operates are large seaport and has approached us with the task of evaluating their current data and analytics  (DA) system. Our methodology used to evaluate their current DA system was based on creating metrics to score individual components consisting of their people, technologies, and processes. 
+
+To assess their people we decided to create a scorecard to quantify their inherent skills, taking into consideration skills that would lend themselves to the roles these individuals were involved in. Additionally we wanted to test a goodness of fit for these individuals by evaluating their hypothetical performance while on the job. If the people within the company exhibited skills that were in alignment of their role and they could perform their job well ICM would be given a 'pass' in this area.
+
+To assess their technologies we wanted to consider their current ERP and WMS systems in comparison to other hypothetical technologies that were available on the market. To do this we created a framework to evaluate currently available technologies to help manage their people, data, and operations. We then assessed based on a few criteria which system would be best as a replacement if a replacement was necessary. If their current system was capable of managing their people, data, and operations then they would be given a 'pass' in this area.
+
+To assess their processes, we had to consider first the people and technologies that ICM employed. We outlined after numerous discussions with the Information Security Officer strong data governance programs and the importance of the technologies used to manage operations data. If the company had excellent protocols in place to manage independent data sources they were given a 'pass' in this area.
+
+Our evaluation is based on the ratio of 'passes' and 'fails'. Given that our client has three 'passes', we can determine that they are employing qualified individuals, they are using excellent technologies that empower their teams, and the processes they are following enforce strong data governance. Given that our client has two 'passes', we can conclude that they are stable in their growth because they either have the right people, the right technologies, or are following strong policies. Given they have either one 'pass' or no 'passes', we can determine that our client still lacks the majority of the requirements for a successful data and analytics system to be implemented. In this case, they are immature and still require the right people, the right technologies, and/or the right processes to follow to be successful.
+
+Following these guidelines, we have determined that ICM currently has unsuitable environment set up for data analysis and data management. Throughout our time investigating the client's systems we found that individuals in managerial roles lacked adequate information of strong digital systems and protocols, technologies may be improperly configured or may not be a good fit for their operations, and that processes for strong data governance programs were not in place. These characteristics of our client indicated to us that their system was immature and needed improvements, however, we believe that ICM has a strong starting point because they can employ technologies that help support operational systems across their company. In our report we try to communicate the improvements that they could implement to provide higher customer satisfaction and create trust.
+\newpage
+
 # Intercontinental Cargo Moving Corporation Evaluation
 
 ## Background
@@ -34,12 +55,20 @@ To provide ICM with the aforementioned tools, our team is tasked with implementi
 
 ### People
 
-This section is meant to address the hiring needs and concerns of ICM. Including the implementation of a logistic regression model specifically designed to evaluate current talent and identify key areas of need for future employees for the DA systems team. The model being considered will consist of predicting how likely an employee is to be working on a project best suited to their skills and to ICM's needs. The increasing challenges of hiring and evaluating employees has never been more important and similarly, the ability to use models to create an intellectually stimulating and innovative work environment is at the forefront of all companies needs. This section will address the concerns as identified by ICM, including how to evaluate current and future employees, where and what kinds of people to hire, and how to best employ an efficient workforce. 
+In this section we address the hiring needs and concerns of ICM through the implementation of a logistic regression model specifically designed to evaluate current talent and identify key areas of need for future DA systems team employees. The model being considered will consist of predicting how likely an employee is to be working on a project best suited to their skills and to ICM's needs. The increasing challenges of hiring and evaluating employees has never been more important, and similarly, the ability to use models to create an intellectually stimulating and innovative work environment is at the forefront of all companies needs. This section will address the concerns as identified by ICM, including how to evaluate current and future employees, where and what kinds of people to hire, and how to best employ an efficient workforce. 
 
 #### Introduction
 
-We begin by examining a framework in which ICM can get a complete picture of how their employees are performing. Namely, the evaluation of current and future talent at ICM will consist of identifying the ratio between cost and time of given projects. That is, given a project, how much is it costing the company versus how much is ICM gaining from the completion of the project. This can be revenue or experience gained. Cost in this sense is referring to both the financial cost, as well as cost in terms of number of employees assigned to a project. In other words, the goal is to identify projects that are high cost and high time, and make adjustments that reduce cost/time based on which employees are working on the project. High cost, high time project will often yield significantly worse results then projects that are low cost and low time, which in turn, effects the overall productivity of the company. Ideally, all projects would be designated low cost and low time. Again, low cost in this sense, does not strictly refer to financial cost, but to an optimization of having the right employees working on the right projects.
-To achieve the goal of optimizing ICM's workforce, there must be a plethora of data in which employees can be accurately regarded. For the sake of simplicity and clarity, the initial model will consists of five key skill identifiers. Including, general/specific skills: Data Analysis, Quantitative reasoning, Programming ability, Project Management, and Communication skills. Additionally, years of experience will be a parameter to consider, and finally, is the employee actively involved in a low cost low time project. This is subject to change, and clearly, somewhat subjective, which is intended. By identifying what projects are currently viewed as low cost and time, as well as who is working on those projects, the skills that are involved in ensuring the success of those projects can be leveraged in such a way that all employees can be assigned to projects that would increase the likely hood of the project either continuing to be or moving to being a low cost and time project. 
+We begin by examining a framework in which ICM can get a complete picture of how their employees are performing. Namely, the evaluation of current and future talent at ICM will consist of identifying the ratio between cost and time of given projects. That is, given a project, how much is it costing the company versus how much is ICM gaining from the completion of the project. This can be revenue or experience gained. Cost in this sense is referring to both the financial cost, as well as cost in terms of number of employees assigned to a project. In other words, the goal is to identify projects that are high in costs and high in resource allocation time, and make adjustments that reduce cost/time based on which employees are working on the project. High cost, high time projects will often yield significantly worse results then projects that are low cost and low time, which in turn, effects the overall productivity of the company. Ideally, all projects would be designated low cost and low time. Again, low cost in this sense, does not strictly refer to financial cost, but to an optimization of having the right employees working on the right projects.
+To achieve the goal of optimizing ICM's workforce, there must be a plethora of data in which employees can be accurately regarded. For the sake of simplicity and clarity, the initial model will consists of five key skill identifiers including:
+
+  - Data Analysis
+  - Quantitative reasoning
+  - Programming ability
+  - Project Management
+  - Communication skills 
+  
+We also consider years of experience as a parameter since experience often relates to increases of ability over time. Finally, we look at whether the employee actively involved in a low cost low time project. This is subject to change, and clearly, somewhat subjective, which is intended. By identifying what projects are currently viewed as low cost and time, as well as who is working on those projects, the skills that are involved in ensuring the success of those projects can be leveraged in such a way that all employees can be assigned to projects that would increase the likely hood of the project either continuing to be or moving to being a low cost and time project. 
 
 #### Assessment Method
 
@@ -53,7 +82,44 @@ Thus, when we fit a logistic regression model we can use the following equation 
 \begin{align*}
     p(x) = \frac{e^{\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_p X_p}}{(1 + e^{\beta_0 x_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_p X_p)}}
 \end{align*}
-We then use some probability threshold to classify the observation as either 1 or 0. For example, given a data set with 40 people, the model used would output something that predicts with approximately $70\%$ accuracy an employee being involved in a low cost low time project. From here ICM can examine what skills that employee has, as well as how man years of experience they have. Now, it should be emphasized that this model will improve with more data, that is, the more parameters that are used to associate employees with successful projects the better the model will be at identifying high or low need areas. 
+We then use some probability threshold to classify the observation as either 1 or 0. For example, given a data set with 40 people, the model used would output something that predicts with approximately $70\%$ accuracy an employee being involved in a low cost low time project. From here ICM can examine what skills that employee has, as well as how man years of experience they have. Now, it should be emphasized that this model will improve with more data, that is, the more parameters that are used to associate employees with successful projects the better the model will be at identifying high or low need areas.
+
+```{python staff_assessment, echo = FALSE}
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn import metrics
+
+ave = [9.4, 9.2, 9.3, 9.0, 8.9, 8.4, 8.1, 8.0, 7.9, 7.9, 7.8, 7.7, 7.7, 7.6, 7.6, 7.6, 7.5, 7.3, 7.1, 6.9, 6.8, 6.5, 6.5, 6.8, 6.7, 6.5, 6.5, 6.3, 6.2, 5.9, 5.5, 5.0, 4.8, 4.3, 4.5, 4.3, 4.2, 4.0, 4.0, 4.0]
+years = [6, 8, 9, 14, 10, 8, 4, 10, 12, 11, 7, 6, 5, 7, 8, 6, 7, 5, 5, 3, 4, 5, 4, 4, 3, 3, 2, 4, 3, 4, 3, 5, 4, 3, 2, 1, 1, 0, 0, 1]
+lowct = [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1 , 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 , 0, 1, 0, 0, 0, 0, 0, 0, 0]
+
+data = {'Average': ave, 'Years': years, 'Pro': lowct}
+df = pd.DataFrame(data)
+#define the predictor variables and the response variable
+X = df[['Average', 'Years']]
+y = df['Pro']
+
+#split the dataset into training (70%) and testing (30%) sets
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.25,random_state=0) 
+
+#instantiate the model
+log_regression = LogisticRegression()
+
+#fit the model using the training data
+log_regression.fit(X_train,y_train)
+
+#use model to make predictions on test data
+y_pred = log_regression.predict(X_test)
+
+cnf_matrix = metrics.confusion_matrix(y_test, y_pred)
+print(cnf_matrix)
+
+print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
+```
+
+Running the model with hypothetical staff profiles show that when using training data for our logistic regression model we see that of the staff we profile, all of them are placed within the correct categories. However, when using the testing data we find that this accuracy level decreases to $70\%$.
 
 #### Assessment Outcomes
 
@@ -63,27 +129,28 @@ Aside from universities, getting involved in conferences and looking for people 
 
 #### Summary
 
-Addressing the complex and comprehensive needs of a corporation like ICM must rely on the use of data-driven approaches. By modeling the various projects ICM is involved in using cost and time, ICM can identify key skills and characteristics of their employees and use that information to make data informed decisions. It should also be noted that not all employees share the same skills, so by moving an employee who has high programming or quantitative skills to an area that is in need of those skills the chances of improving the productivity of the workplace increases. This also exposes employees to a variety of different skills and serves as a "On-the fly" training experience. Hiring, aside from the usual outlets, should consist of locating talented individuals through an internship program or university/conference setting to find specialized talent they can outsource for optimal efficiency. Training can be done on the job when employing a model that specializes in putting the right people on the right projects. Therefore, by utilizing a logistic regression model, as well as some variation of skill, as determined by what projects are having success, ICM can create an environment that will not only benefit themselves, but their employees by putting them in positions to succeed.  
+Addressing the complex and comprehensive needs of a corporation like ICM must rely on the use of data-driven approaches. By modeling the various projects ICM is involved in using cost and time, ICM can identify key skills and characteristics of their employees and use that information to make data informed decisions. It should also be noted that not all employees share the same skills, so by moving an employee who has high programming or quantitative skills to an area that is in need of those skills the chances of improving the productivity of the workplace increases. This also exposes employees to a variety of different skills and serves as a "On-the fly" training experience. Hiring, aside from the usual outlets, should consist of locating talented individuals through an internship program or university/conference setting to find specialized talent they can outsource for optimal efficiency. Training can be done on the job when employing a model that specializes in putting the right people on the right projects. Therefore, by utilizing a logistic regression model, as well as some variation of skill, as determined by what projects are having success, ICM can create an environment that will not only benefit themselves, but their employees by putting them in positions to succeed. For these reasons, we are giving ICM a 'fail' within this area.
 
 ### Technology
 
 #### Criteria
 
-Since the framework for evaluating technical solutions is more important than choosing them at this time, specific criteria need to be established as metrics to measure the effectiveness of a specific solution, now or in the future. The six criteria measured in this model are as follows, with Feature Match having the highest weight in the final calculation:   
-- Price  
-- Support  
-- Ease of Use  
-- Feature Match  
-- Trial Options  
-- Accessibility (operating system availability, options for contrast, etc.)  
+Since the framework for evaluating technical solutions is more important than choosing them at this time, specific criteria need to be established as metrics to measure the effectiveness of a specific solution, now and in the future. The six criteria measured in this model are as follows, with 'Feature Match' having the highest weight in the final calculation:
 
-For each solution, the criteria are evaluated and given a score from 0 to 100 with 100 being the highest score. Consideration of what is considered "good" for a metric is also taken into account. For example, a low priced solution with good support would have high scores in both categories. The scores are input into the program which displays the scores on a radar chart separated by solution. Additionally, a weighted score is calculated for each solution.
+  - Price  
+  - Support  
+  - Ease of Use  
+  - Feature Match  
+  - Trial Options  
+  - Accessibility (operating system availability, options for contrast, etc.)  
+
+For each solution, the criteria are evaluated and given a score from 0 to 100 with 100 being the highest score. We also emphasize with added weight options that provide more value for the client. For example, a low priced solution with good support would have high scores in both categories. The scores are input into the program which displays the scores on a radar chart separated by solution. Additionally, a weighted score is calculated for each solution based on the perceived value the client would see from selecting that choice.
 
 The model can work for physical and digital forms of technology and can indicate if multiple products are needed. For example, if two products fulfill different aspects of a needed solution, but both have good overall scores, then they might both be a good fit to use together.  
 
 The following code and diagrams are examples made with simulated data and do not reflect real technical solutions.
 
-#### Initial Pass
+#### Evaluating Technologies as Solutions
 
 The first step is to display all the proposed solutions next to each other to create an initial comparison. This provides an overview of all possible options before the list gets trimmed down. 
 
@@ -92,14 +159,18 @@ The first step is to display all the proposed solutions next to each other to cr
 set.seed(12345)     # Sets seed for repeatable results
 num_prog <- 9       # Sets number of solutions
 
-categories <- c("Price", "Support", "Ease of Use", 
-                "Feature Match", "Trial", "Accessibility")
+categories <- c("Price", "Support", "Ease of Use", "Feature Match", "Trial", "Accessibility")
 solution_names <- c("Max", "Min", paste("Solution", 1:num_prog))
 size <- length(categories)
 
 # Creates data frame with score data. Uses placeholder random data
-tech_analysis <- data.frame(rbind(rep(100, size), rep(0, size), 
-                                 matrix(sample(0:100, size * num_prog), nrow = num_prog)))
+tech_analysis <- data.frame(
+  rbind(
+    rep(100, size),
+    rep(0, size), 
+    matrix(sample(0:100, size * num_prog), nrow = num_prog)
+  )
+)
 
 # Sets column and row names
 colnames(tech_analysis) <- categories
@@ -114,17 +185,19 @@ colors <- 2:10
 
 # Loops through all rows except first 2
 for (i in 3:nrow(tech_analysis)) {                       
-  fmsb::radarchart(tech_analysis[c(1, 2, i),],                # Creates radar chart
-                   cglty = 1,                                 # Grid line type
-                   cglcol = "gray",                           # Grid line color
-                   pcol = colors[i-2],                        # Color for each line
-                   plwd = 2,                                  # Width for each line
-                   plty = 1,                                  # Line type for each line
-                   pfcol = scales::alpha(colors[i-2], 0.25),  # Fill color
-                   title = rownames(tech_analysis)[i],        # Set titles
-                   axistype = 1,                              # Set axis type
-                   axislabcol = "black",                      # Set axis color
-                   caxislabels = seq(0, 100, 25))             # Set axis labels
+  fmsb::radarchart(
+    tech_analysis[c(1, 2, i),],                # Creates radar chart
+    cglty = 1,                                 # Grid line type
+    cglcol = "gray",                           # Grid line color
+    pcol = colors[i-2],                        # Color for each line
+    plwd = 2,                                  # Width for each line
+    plty = 1,                                  # Line type for each line
+    pfcol = scales::alpha(colors[i-2], 0.25),  # Fill color
+    title = rownames(tech_analysis)[i],        # Set titles
+    axistype = 1,                              # Set axis type
+    axislabcol = "black",                      # Set axis color
+    caxislabels = seq(0, 100, 25)              # Set axis labels
+  )
 }
 
 par(op)
@@ -148,14 +221,14 @@ table1 <- solution_data[3:nrow(solution_data),] %>%
   tibble::rownames_to_column("Solutions") %>% 
   kableExtra::kbl(caption = "Possible Solutions") %>%
   kableExtra::kable_minimal() %>%
-  kableExtra::kable_styling(latex_options = "scale_down")
+  kableExtra::kable_styling(latex_options = c("scale_down", "HOLD_position"))
 
 table1
 ```
 
 A viewer can easily use the charts to compare the strengths and weaknesses of each solution or they can use the table for a more detailed breakdown of each solution. By displaying the data in this fashion, incompatible or unnecessary tools can be dismissed quickly, resulting in less cluttered decision making.  
 
-#### Filtering
+#### Selecting the Best Options 
 
 After all solutions are evaluated and displayed, the data set is filtered for solutions with high evaluation scores. The program is currently configured to pull solutions with a weighted score of 75 or higher.
 
@@ -196,7 +269,7 @@ table2 <- table_frame[3:nrow(table_frame),] %>%
   tibble::rownames_to_column("Solutions") %>% 
   kableExtra::kbl(caption = "Best Fit Solutions") %>%
   kableExtra::kable_minimal() %>%
-  kableExtra::kable_styling(latex_options = "scale_down")
+  kableExtra::kable_styling(latex_options = c("scale_down", "HOLD_position"))
 
 table2
 ```
@@ -205,7 +278,7 @@ table2
 
 Shrinking the data set to only a few options, or in this case one, allows for a better look at this solution. In this example, we can see that this tool has all the features needed and has great support even though it might be expensive. Additionally, it has decent accessibility and seems that it would not need a copious amount of training to use. A trial period might not be as necessary in this case because the solution fits enough criteria.  
 
-With these systems and visualizations in place, it is easy to see how different technical solutions compare to each other, as well as where they excel and what they lack. By using this system, the Information Technology (IT) department at ICM can make informed decisions about technical solutions and prioritize what criteria are most important to the company.
+With these systems and visualizations in place, it is easy to see how different technical solutions compare to each other, as well as where they excel and what they lack. By using this system, the Information Technology (IT) department at ICM can make informed decisions about technical solutions and prioritize what criteria are most important to the company. If ICM can empower their IT department with a strong platform to support other systems within the company we can safely give them a 'pass' in this area.
 
 ### Process
 
@@ -269,19 +342,18 @@ dim_imports_ft <-
   kableExtra::kbl(caption = "Import Dimensional Table") %>%
   kableExtra::footnote(general = "Sample import data extracted from ICM database container") %>%
   kableExtra::kable_minimal() %>%
-  kableExtra::kable_styling(latex_options = "scale_down")
+  kableExtra::kable_styling(latex_options = c("scale_down", "hold_position"))
 
 dim_exports_ft <- 
   dim_exports %>%
   kableExtra::kbl(caption = "Export Dimensional Table") %>%
   kableExtra::footnote(general = "Sample export data extracted from ICM database container") %>%
   kableExtra::kable_minimal() %>%
-  kableExtra::kable_styling(latex_options = "scale_down")
-```
+  kableExtra::kable_styling(latex_options = c("scale_down", "hold_position"))
 
-```{r ie_out, echo=FALSE}
 dim_imports_ft
 dim_exports_ft
+
 ```
 
 Similarly, we can audit where specific containers are transported after we receive them. Using a dimensional table that tracks where containers are relocated after we receive them, or before and after going through the customs process would be a useful tool to audit which containers we still have in our possession and where. To illustrate this idea, we include a matrix of hypothetical grid locations within the port used for storing these containers.
@@ -321,14 +393,15 @@ dim_port_transportation <-
 v_ft <-
   v %>%
   kableExtra::kbl(caption = "Grid showing hypothetical storage locations in the port") %>%
-  kableExtra::kable_minimal()
+  kableExtra::kable_minimal() %>%
+  kableExtra::kable_styling(latex_options = "hold_position")
 
 dim_port_transportation_ft <- 
   dim_port_transportation %>%
   kableExtra::kbl(caption = "Transportation Dimensional Table") %>%
   kableExtra::footnote(general = "Sample transportation data extracted from ICM database container") %>%
   kableExtra::kable_minimal() %>%
-  kableExtra::kable_styling(latex_options = "scale_down")
+  kableExtra::kable_styling(latex_options = c("scale_down", "hold_position"))
 
 v_ft
 dim_port_transportation_ft
@@ -369,7 +442,7 @@ fact_operations_ft <-
   kableExtra::kbl(caption = "Operations Factual Table") %>%
   kableExtra::footnote(general = "Operations data combined from dimensional tables collected from ICM database containers") %>%
   kableExtra::kable_minimal() %>%
-  kableExtra::kable_styling(latex_options = "scale_down")
+  kableExtra::kable_styling(latex_options = c("scale_down", "hold_position"))
 
 fact_operations_ft
 
@@ -378,6 +451,17 @@ fact_operations_ft
 #### Metadata
 
 Metadata is equally as important as some of the items outlined in the previous data governance section. To reduce the time spent by members of the DA system team investigating the use and contents of data sets, we can provide metadata that explains the use and contents of the data. ICM can create effective metadata by drafting documentation that lists each table contained within a database, their uses, and which area of the business they pertain to. Within each table of the database, ICM should create a list of all columns of that table, the data types of each column, the primary keys associated with that table, and the contents that each column represents. Strong documentation can assist with the longevity and archival of data as tables outlive their usefulness, are superseded or deprecated, or become irrelevant if the data contained within the table is no longer needed for analysis. 
+
+#### Summary
+
+Taking the aforementioned principals into account, its imperative that ICM try to implement these changes as soon as possible. By not following strong processes for data governance, its possible that management is unable to reconcile their operational figures, and certain transactions may not be correctly recorded. Without strong protocols its possible that containers are unaccounted for, or incorrectly handled when in transit or while going through customs. Following strong data processes will equip management with the visibility and consistency needed to effectively oversee operations within the port and plan for the future. For these reasons, our firm is rating this area a 'fail'.
 \newpage
 
 # Letter to Interested Parties
+
+To all interested parties,
+
+Our firm has been tasked with evaluating the current systems used by Intercontinental Cargo Moving Corporation (ICM). While we undergo this assessment we want to provide you with assurance that ICM is more than capable of operating with a high level of service provided to its customers. During our assessment, our firm will be considering their current systems environment and offering suggestions on ways they can improve their processes. These improvements can have a direct impact on the customer service provided to you, our client's customers. With these improvements, we believe that ICM will be able to offer it's customers a higher quality of service and many other dividends.
+
+Thank you for your patience while we undergo this process!
+
