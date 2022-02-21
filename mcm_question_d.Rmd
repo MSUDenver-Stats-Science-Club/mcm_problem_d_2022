@@ -13,6 +13,8 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(flextable)
+library(fmsb)
+library(tibble)
 
 flextable::set_flextable_defaults(
   fonts_ignore = TRUE
@@ -68,9 +70,149 @@ We then use some probability threshold to classify the observation as either 1 o
 
 ### Technology
 
+#### Criteria
+
+Since the framework for evaluating technical solutions is more important than choosing them at this time, specific criteria need to be established as metrics to measure the effectiveness of a specific solution, now or in the future. The six criteria measured in this model are as follows, with Feature Match having the highest weighting in the final calculation:   
+- Price  
+- Support  
+- Ease of Use  
+- Feature Match  
+- Trial Options  
+- Accessibility (operating system availability, options for contrast, etc.)  
+
+For each solution, the criteria are evaluated and given a score from 0 to 100 with 100 being the highest score. Consideration of what is considered "good" for a metric is also taken into account. For example, a low priced solution with good support would have high scores in both categories. The scores are input into the program which displays the scores on a radar chart separated by solution. Additionally, a weighted score is calculated for each solution.  
+
+The model can work for physical and digital forms of technology and can indicate if multiple products are needed. For example, if two products fulfill different aspects of a needed solution, but both have good overall scores, then they might both be a good fit to use together.  
+
+The following code and diagrams are examples made with simulated data and do not reflect real technical solutions.
+
+#### Initial Pass
+
+The first step is to display all the proposed solutions next to each other to create an initial comparison. This provides an overview of all possible options before the list gets trimmed down.
+
+
+```{r, dpi=300, fig.width=7, warning=FALSE, strip.white=FALSE}
+
+set.seed(12345)     # Sets seed for repeatable results
+num_prog <- 9       # Sets number of solutions
+
+categories <- c("Price", "Support", "Ease of Use", 
+                "Feature Match", "Trial", "Accessibility")
+solution_names <- c("Max", "Min", paste("Solution", 1:num_prog))
+size <- length(categories)
+
+# Creates data frame with score data. Uses placeholder random data
+tech_analysis <- data.frame(rbind(rep(100, size), rep(0, size), 
+                                 matrix(sample(0:100, size * num_prog), nrow = num_prog)))
+
+# Sets column and row names
+colnames(tech_analysis) <- categories
+row.names(tech_analysis) <- solution_names
+
+# Sets margins to allow for multi-graph display
+op <- par(mar = c(1, 1, 1, 1))
+height <- ((nrow(tech_analysis) - 2) / 3)
+par(mfrow = c(height, 3))
+
+colors <- 2:10
+
+# Loops through all rows except first 2
+for (i in 3:nrow(tech_analysis)) {                       
+  fmsb::radarchart(tech_analysis[c(1, 2, i),],                # Creates radar chart
+                   cglty = 1,                                 # Grid line type
+                   cglcol = "gray",                           # Grid line color
+                   pcol = colors[i-2],                        # Color for each line
+                   plwd = 2,                                  # Width for each line
+                   plty = 1,                                  # Line type for each line
+                   pfcol = scales::alpha(colors[i-2], 0.25),  # Fill color
+                   title = rownames(tech_analysis)[i],        # Set titles
+                   axistype = 1,                              # Set axis type
+                   axislabcol = "black",                      # Set axis color
+                   caxislabels = seq(0, 100, 25))             # Set axis labels
+}
+
+par(op)
+score <- c()
+
+cat_weights <- c(0.05, 0.2, 0.15, 0.5, 0.05, 0.05)    # Sets weights for each category
+
+# Calculates weighted total score for each row
+for (i in 3:nrow(tech_analysis)) {
+  row <- i
+  score_list <- as.numeric(tech_analysis[row, ])
+  weighted_score <- sum(score_list * cat_weights)
+  score <- c(score, weighted_score)
+}
+
+# Creates new data frame with weighted scores
+solution_data <- cbind(tech_analysis, "Eval" = c(-1, -1, score))
+
+# Displays solutions with all data including the weighted score
+table1 <- solution_data[3:nrow(solution_data),] %>% 
+  tibble::rownames_to_column("Solutions") %>% 
+  flextable::flextable() %>% 
+  flextable::theme_zebra() %>% 
+  flextable::autofit(add_w = 0, add_h = 0)
+table1
+```
+A viewer can easily use the charts to compare the strengths and weaknesses of each solution or they can use the table for a more detailed breakdown of each solution. By displaying the data in this fashion, incompatible or unnecessary tools can be dismissed quickly, resulting in less cluttered decision making.  
+
+#### Filtering
+
+After all solutions are evaluated and displayed, the data set is filtered for solutions with high evaluation scores. The program is currently configured to pull solutions with a weighted score of 75 or higher.
+
+
+```{r, dpi=300, fig.width=8, warning=FALSE, strip.white=FALSE}
+
+# Filters out all solutions with a weighted score >= 75 and removes score column
+high_scores <- solution_data %>% 
+  dplyr::filter(Eval >= 75 | Eval == -1) %>% 
+  dplyr::select(-Eval)
+
+# Sets margins to allow for multi-graph display
+op <- par(mar = c(1, 1, 1, 1))
+height <- ceiling((nrow(high_scores)-2) / 3)
+par(mfrow = c(height, 1))
+
+colors <- 2:10
+
+# Loops through all rows except first 2
+for (i in 3:nrow(high_scores)) {
+  fmsb::radarchart(high_scores[c(1, 2, i),],                  # Creates radar chart
+                   cglty = 1,                                 # Grid line type
+                   cglcol = "gray",                           # Grid line color
+                   pcol = colors[i-2],                        # Color for each line
+                   plwd = 2,                                  # Width for each line
+                   plty = 1,                                  # Line type for each line
+                   pfcol = scales::alpha(colors[i-2], 0.25),  # Fill color
+                   title = rownames(high_scores)[i],          # Set titles
+                   axistype = 1,                              # Set axis type
+                   axislabcol = "black",                      # Set axis color
+                   caxislabels = seq(0, 100, 25))             # Set axis labels
+}
+
+par(op)
+
+# Displays solutions with all data including the weighted score
+table_frame <- solution_data %>% filter(Eval >= 75 | Eval == -1)
+table2 <- table_frame[3:nrow(table_frame),] %>% 
+  tibble::rownames_to_column("Solutions") %>% 
+  flextable::flextable() %>% 
+  flextable::theme_zebra() %>% 
+  flextable::autofit(add_w = 0, add_h = 0)
+table2
+```
+
+#### Summary
+
+Shrinking the data set to only a few options, or in this case one, allows for a better look at this solution. In this example, we can see that this tool has all the features needed and has great support even though it might be expensive. Additionally, it has decent accessibility and seems that it would not need a copious amount of training to use. A trial period might not be as necessary in this case because the solution fits enough criteria.  
+
+With these systems and visualizations in place, it is easy to see how different technical solutions compare to each other, as well as where they excel and what they lack. By using this system, the Information Technology (IT) department at ICM can make informed decisions about technical solutions and prioritize what criteria are most important to the company.
 
 
 ### Process
+
+
 
 #### Data Governance
 
